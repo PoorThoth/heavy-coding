@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Heavy Coding — the end of AI-coding hallucination</title>
+<style>
+  :root{
+    --bg:#eef1f6; --card:#fff; --line:#dfe5ee; --ink:#0b1220; --muted:#5a6577;
+    --navy:#0f1d33; --navy2:#16294a;
+    --red:#c02436; --redbg:#fdf2f3; --redline:#f2c9cf;
+    --grn:#0d6e5e; --grnbg:#effaf7; --grnline:#bfe6dd;
+    --amb:#a5600a;
+    --blue:#1d4ed8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","Helvetica Neue",system-ui,sans-serif;background:var(--bg);color:var(--ink);
+       width:1760px;padding:0 0 30px;-webkit-font-smoothing:antialiased}
+  .mono{font-family:Consolas,"SF Mono",Menlo,monospace}
+
+  /* ---------- header ---------- */
+  .hero{background:var(--navy);color:#fff;padding:30px 46px 26px;position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;right:-120px;top:-140px;width:520px;height:520px;
+    background:radial-gradient(circle,rgba(192,36,54,.34),transparent 62%);}
+  .hero .row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+  .hero h1{font-size:52px;letter-spacing:-1.6px;font-weight:800;line-height:1}
+  .hero h1 span{color:#ff5b6e}
+  .hero .sub{margin-top:12px;font-size:19px;color:#c8d4e6;letter-spacing:-.2px}
+  .hero .sub b{color:#fff;font-weight:700}
+  .hero .meta{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;max-width:620px}
+  .chip{font-size:12.5px;font-weight:700;border:1px solid rgba(255,255,255,.28);border-radius:999px;
+        padding:7px 14px;color:#dbe5f2}
+  .chip.hot{border-color:#ff5b6e;color:#ffd0d6;background:rgba(192,36,54,.18)}
+  .def{margin-top:22px;display:grid;grid-template-columns:1.06fr .94fr;gap:14px;position:relative;z-index:2}
+  .def .box{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:15px 18px}
+  .def .box h4{font-size:13px;letter-spacing:.9px;text-transform:uppercase;color:#93a7c4;font-weight:800;margin-bottom:9px}
+  .def .box p{font-size:15.2px;line-height:1.55;color:#e8eef8}
+  .def .box p b{color:#fff}
+  .def .box p code{font-family:Consolas,monospace;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:5px;font-size:14px}
+  .def .box .kx{color:#ff8f9c;font-weight:700}
+
+  /* ---------- section shell ---------- */
+  .sec{margin:16px 46px 0}
+  .sec > h2{font-size:15px;letter-spacing:1.1px;text-transform:uppercase;color:#67748a;font-weight:800;
+            display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .sec > h2 i{font-style:normal;background:var(--navy);color:#fff;font-size:12px;padding:4px 9px;border-radius:7px;letter-spacing:.5px}
+  .sec > h2 em{font-style:normal;font-weight:600;text-transform:none;letter-spacing:0;color:#8b95a7;font-size:13px}
+
+  /* ---------- claim cards ---------- */
+  .claims{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cl{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:0;overflow:hidden;
+      box-shadow:0 1px 2px rgba(11,18,32,.04),0 12px 26px -20px rgba(11,18,32,.35)}
+  .cl .say{padding:13px 16px 12px;background:var(--redbg);border-bottom:1px solid var(--redline);position:relative}
+  .cl .say .who{font-size:10.6px;font-weight:800;letter-spacing:.9px;color:#9d2734;text-transform:uppercase;margin-bottom:6px}
+  .cl .say p{font-size:17px;line-height:1.32;font-weight:700;color:#7d1a26;letter-spacing:-.2px}
+  .cl .say p:before{content:"“"}
+  .cl .say p:after{content:"”"}
+  .cl .real{padding:12px 16px 13px}
+  .cl .real .t{font-size:10.6px;font-weight:800;letter-spacing:.9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  .cl .real p{font-size:13.4px;line-height:1.5;color:#2a3444}
+  .cl .real code{font-family:Consolas,monospace;font-size:12.4px;background:#f1f4f9;border:1px solid #e4e9f2;
+                 padding:0 5px;border-radius:4px;color:#0b3a8a}
+  .cl .kill{padding:9px 16px 11px;background:var(--grnbg);border-top:1px solid var(--grnline);
+            display:flex;align-items:center;gap:9px}
+  .cl .kill .g{font-size:11.5px;font-weight:800;color:#fff;background:var(--grn);border-radius:6px;padding:3px 8px;flex:none}
+  .cl .kill .x{font-size:12.6px;color:#0b4f43;font-weight:600;line-height:1.35}
+  .cl .kill .x b{font-family:Consolas,monospace;color:#8a1220}
+
+  .banner{margin-top:12px;background:var(--navy);color:#c8d4e6;border-radius:12px;padding:13px 18px;
+          display:flex;gap:14px;align-items:flex-start;font-size:13.2px;line-height:1.5}
+  .banner b{flex:none;background:#5ee2aa;color:#062b22;font-size:11.5px;font-weight:800;letter-spacing:.8px;
+            padding:4px 9px;border-radius:6px;margin-top:1px}
+  .banner code{font-family:Consolas,monospace;background:rgba(255,255,255,.1);padding:0 5px;border-radius:4px;color:#ffd479}
+  .banner em{font-style:normal;color:#fff;font-weight:700}
+
+  /* ---------- kill table ---------- */
+  .tbl{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;
+       box-shadow:0 1px 2px rgba(11,18,32,.04),0 12px 26px -20px rgba(11,18,32,.35)}
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  th{background:#f7f9fc;font-size:11.4px;letter-spacing:.7px;text-transform:uppercase;color:#6b7688;
+     text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:800}
+  td{padding:9px 14px;border-bottom:1px solid #eef2f7;font-size:13.2px;line-height:1.4;vertical-align:top;color:#26303f}
+  tr:last-child td{border-bottom:0}
+  td.m{font-family:Consolas,monospace;font-weight:700;color:#7d1a26;font-size:12.6px}
+  td.e{font-family:Consolas,monospace;font-size:12.4px;color:#0b3a8a}
+  td b{font-weight:700;color:#0b1220}
+  .rcb{display:inline-block;font-family:Consolas,monospace;font-weight:800;font-size:12px;padding:2px 7px;
+       border-radius:5px;background:#fff1f2;color:#9d2734;border:1px solid #f3cfd4}
+  .rc0{background:#effaf7;color:#0d6e5e;border-color:#bfe6dd}
+
+  /* ---------- terminal ---------- */
+  .term{background:#0c1526;border-radius:13px;padding:16px 20px 15px;color:#c9d6e8;font-family:Consolas,monospace;
+        font-size:13.2px;line-height:1.62;border:1px solid #1d2b45;overflow:hidden}
+  .term .bar{display:flex;gap:6px;margin-bottom:10px}
+  .term .bar i{width:9px;height:9px;border-radius:50%;background:#33415c;display:block}
+  .term .p{color:#8fe3c8}
+  .term .ok{color:#5ee2aa}
+  .term .no{color:#ff8098}
+  .term .dim{color:#7c8aa3}
+  .term .hl{color:#ffd479}
+
+  /* ---------- 14 gates ---------- */
+  .gates{display:grid;grid-template-columns:repeat(7,1fr);gap:9px}
+  .g{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 11px 11px;
+     box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .g .n{font-size:10.4px;font-weight:800;color:#fff;background:var(--navy);border-radius:5px;padding:2px 6px;
+        display:inline-block;margin-bottom:7px;letter-spacing:.4px}
+  .g h5{font-size:12.9px;font-weight:800;margin-bottom:5px;letter-spacing:-.1px}
+  .g p{font-size:11.5px;line-height:1.44;color:#54606f}
+  .g code{font-family:Consolas,monospace;font-size:11px;background:#f1f4f9;padding:0 4px;border-radius:3px;color:#0b3a8a}
+
+  /* ---------- principles + numbers ---------- */
+  .cols{display:grid;grid-template-columns:1.45fr 1fr;gap:13px}
+  .pr{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px 18px;
+      box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .pr h4{font-size:12.6px;letter-spacing:.8px;text-transform:uppercase;color:#67748a;font-weight:800;margin-bottom:11px}
+  .pr ol{margin-left:0;list-style:none;counter-reset:p}
+  .pr li{counter-increment:p;font-size:13.3px;line-height:1.45;color:#2a3444;padding-left:26px;position:relative;margin-bottom:9px}
+  .pr li:before{content:counter(p);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+     background:var(--navy);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
+  .pr li b{color:#0b1220}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .st{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+       box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .st .v{font-family:Consolas,monospace;font-size:25px;font-weight:800;letter-spacing:-1px;color:var(--navy);line-height:1}
+  .st .v small{font-size:14px;font-weight:700;color:#7b8797}
+  .st .l{font-size:11.6px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+  .qs{display:grid;grid-template-columns:.86fr 1.14fr;gap:16px;background:var(--card);border:1px solid var(--line);
+      border-radius:13px;padding:15px 18px;box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .qs h4{font-size:12.6px;letter-spacing:.8px;text-transform:uppercase;color:#67748a;font-weight:800;margin-bottom:8px}
+  .qs p{font-size:13.2px;line-height:1.5;color:#3a4657}
+  .qs-r{background:#0c1526;border-radius:10px;padding:12px 15px;font-size:12.9px;line-height:1.72;color:#d5e0ef}
+  .qs-r .c{color:#5ee2aa}
+  .qs-r .k{color:#7c8aa3}
+
+  .foot{margin:16px 46px 0;border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;
+        align-items:center;font-size:12.6px;color:#7b8797}
+  .foot b{color:#0b1220;font-family:Consolas,monospace;font-size:13.2px}
+  .foot .rt{display:flex;gap:16px;align-items:center}
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<div class="hero">
+  <div class="row">
+    <div>
+      <h1>HEAVY <span>CODING</span></h1>
+      <p class="sub">AI agents do not lie on purpose — they <b>hallucinate success</b>.<br>This workflow makes every claim pay a toll: an exit code or nothing.</p>
+    </div>
+    <div class="meta">
+      <span class="chip hot">v1.0.0 · first public release</span>
+      <span class="chip">MIT</span>
+      <span class="chip">Bash + Python · zero dependencies</span>
+      <span class="chip">14 gates</span>
+      <span class="chip">github.com/PoorThoth/heavy-coding</span>
+    </div>
+  </div>
+
+  <div class="def">
+    <div class="box">
+      <h4>The problem is not capability — it is verification</h4>
+      <p>An agent reports <b>“done”</b> from the same context that produced the bug. Prompts that ask for honesty, self-review by the same model, and green CI on the wrong tests all fail for one reason: <span class="kx">the judge is the defendant</span>. Nothing in the loop can be wrong and still pass if the judge is a machine-checkable fact.</p>
+    </div>
+    <div class="box">
+      <h4>What this is</h4>
+      <p>A coding session wrapped in <b>14 checkpoints</b>. Each one can only be passed by something a machine can verify: a test that really executed, a diff line that really ran, a report whose <code>file:line</code> really exists. The agent’s prose is never evidence — <span class="kx">only rc=0 on an artifact is</span>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 1. HALLUCINATION TAXONOMY ===================== -->
+<div class="sec">
+  <h2><i>01</i> Seven hallucinations we kept meeting <em>— each one has a real quote, a real cause, and a gate that kills it</em></h2>
+  <div class="claims">
+
+    <div class="cl">
+      <div class="say"><div class="who">executor · after 40 s</div><p>All tests pass</p></div>
+      <div class="real"><div class="t">actually</div><p>pytest collected <b>0 tests</b> (missing <code>pythonpath</code>) and exited 0. “Green” meant nothing ran.</p></div>
+      <div class="kill"><span class="g">G10</span><span class="x">test run + <b>known-red baseline</b></span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">executor · rc=0, empty output</div><p>Done</p></div>
+      <div class="real"><div class="t">actually</div><p>No API key. The executor printed <code>No API key found</code> and <b>exited 0</b> — a silent no-op that looks like success.</p></div>
+      <div class="kill"><span class="g">G1</span><span class="x"><b>envcheck</b> + ledger <code>settled</code></span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">executor · suite is green</div><p>Added retry, fully tested</p></div>
+      <div class="real"><div class="t">actually</div><p>Every test passes, but no test ever calls the new function. The added lines were <b>executed 0 times</b>.</p></div>
+      <div class="kill"><span class="g">G11</span><span class="x">patch coverage: <b>32/32 lines</b> or fail</span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">executor · convergence report</div><p>CR1 is covered by the test suite</p></div>
+      <div class="real"><div class="t">actually</div><p>The named case did not exist. A green suite says nothing about <b>which requirement</b> it covers.</p></div>
+      <div class="kill"><span class="g">G9</span><span class="x">per-CR pointer is <b>executed</b>, not read</span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">executor · diff summary</div><p>Only touched the target file</p></div>
+      <div class="real"><div class="t">actually</div><p>Four unrelated files were modified — including one with uncommitted work from someone else.</p></div>
+      <div class="kill"><span class="g">G7</span><span class="x"><b>dispatch_verify</b>: artifact hashes vs truth</span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">the workflow itself</div><p>We follow this process</p></div>
+      <div class="real"><div class="t">actually</div><p>For one month: <b>0 delegated tickets</b>, every change made by hand. The docs were excellent and unused.</p></div>
+      <div class="kill"><span class="g">G14</span><span class="x"><b>gate_watch</b> + run ledger</span></div>
+    </div>
+
+  </div>
+  <div class="banner">
+    <b>THE RULE</b>
+    <span>Claim → evidence → exit code. If a claim cannot be reduced to a command that returns 0 or non-zero, it is not a deliverable — it is a sentence. Something that truly cannot be tested must say so in the spec, with a reason, and it is printed on every run. <em>Two more, killed the same way:</em> “still working” (30 min, no events → watchdog <b>rc=124</b>) and “it looks right” (reading the patch is how four of these survived review → <code>converge --strict</code>).</span>
+  </div>
+</div>
+
+<!-- ===================== 2. KILL MAP ===================== -->
+<div class="sec">
+  <h2><i>02</i> What the machine actually checks <em>— injected, measured, non-zero</em></h2>
+  <div class="tbl">
+    <table>
+      <colgroup><col style="width:23%"><col style="width:30%"><col style="width:26%"><col style="width:21%"></colgroup>
+      <tr><th>Gate</th><th>Evidence it demands</th><th>How it fails</th><th>Measured on a real repo</th></tr>
+      <tr><td><b>1</b> <code class="mono">envcheck</code></td><td>key present, executor runs, repo state known</td><td>rc=1 with the exact paths searched; prints <code>len=35</code>, never the value</td><td>the silent rc=0 no-op is caught before a token is spent</td></tr>
+      <tr><td><b>2-4</b> <code class="mono">lookup</code> · <code class="mono">task</code> · lint</td><td>prior art recorded; a SPEC with one measurable criterion per CR; observed facts; expected artifacts</td><td>rc=1 without a lookup record · rc=5 without a line starting <code>实测事实:</code></td><td>“reinvent the wheel” and “brief full of assumptions” are stopped at the door</td></tr>
+      <tr><td><b>5-6</b> isolation + watchdog</td><td>one working tree per ticket; a new event within N seconds</td><td>rc=4 (lock) · rc=124, process killed and ticket marked stalled</td><td>two agents in one tree delete each other’s edits; a hung run stops looking like a running one</td></tr>
+      <tr><td><b>7</b> <code class="mono">dispatch_verify</code></td><td>declared artifacts re-hashed against a truth file: content, count, key fields</td><td>rc=2 tampered or out of scope · 3 differs from truth · 4 count mismatch · 5 bad args</td><td>out-of-scope writes caught without rereading the diff</td></tr>
+      <tr><td><b>8-9</b> <code class="mono">converge</code> + per-CR test</td><td>report exists, verdict present, every CR mentioned, ≥1 real <code>file:line</code>; that CR’s named case <em>executed</em></td><td>rc=2 report or test evidence broken · rc=3 not converged</td><td>spec ↔ code ↔ test, three-way and mechanical — not “the suite is green”</td></tr>
+      <tr><td><b>10-11</b> tests + <code class="mono">diffcov</code></td><td>failing set ⊆ recorded red baseline; every added executable line executed</td><td>new red ⇒ fail, naming only the new ones · rc=5 with uncovered line numbers · rc=4 = cannot measure (SKIP, never pass)</td><td>arrived with 4 pre-existing reds and stayed honest; first ticket <b>32/32</b> after two untested error branches were found</td></tr>
+      <tr><td><b>12-13</b> format + ledger</td><td>normalized line endings before judging; rc, duration, tokens, cost, <code>settled</code> per ticket</td><td>“whitespace only” reported separately · no <code>settled</code> ⇒ it never finished</td><td>no permanent CRLF false red; yield metrics: rework rate, wasted runs, cost per ticket</td></tr>
+      <tr><td><b>14</b> <code class="mono">gate_watch</code></td><td>a delegated ticket or a new report within N days; entry points still present</td><td>silent when healthy, one alert with cooldown when bypassed</td><td>catches the worst failure of all: nobody uses the workflow</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 3. REAL OUTPUT ===================== -->
+<div class="sec">
+  <h2><i>03</i> The only acceptable report <em>— from a real ticket on a real private repo</em></h2>
+  <div class="term">
+    <div class="bar"><i></i><i></i><i></i></div>
+<div><span class="p">$</span> wfctl verify .</div>
+<div><span class="ok">[wfctl] ✅</span> tests: pytest -q <span class="dim">(rc=1 — all 4 failures are the recorded known-red baseline, see .agents/pytest-baseline.txt)</span></div>
+<div><span class="ok">[wfctl] ✅</span> patch coverage: <span class="hl">PASS 32/32 lines executed (100.0%, threshold 100%)</span></div>
+<div><span class="ok">[wfctl] ✅</span> converge --strict <span class="dim">(report ↔ spec ↔ tests)</span></div>
+<div><span class="ok">[wfctl] ✅</span> ledger: rc=0 cost_usd=0.012712 in_tokens=38933 out_tokens=25935 settled=1</div>
+<div><span class="ok">[wfctl] === verify all green: 4 passed, 1 skipped ===</span></div>
+<div style="margin-top:9px"><span class="p">$</span> wfctl stats --since 2026-11-24</div>
+<div><span class="dim">tickets 2 · rework 0% · wasted runs 0% · acceptance rounds 0 · cost $0.0127 / ticket</span></div>
+<div style="margin-top:9px"><span class="no">✗</span> <span class="dim">the same command with one requirement uncovered →</span> <span class="no">[wfctl!] ❌ patch coverage (rc=5) — uncovered lines [264, 265, 266, 267, 268, 269]</span></div>
+  </div>
+</div>
+
+<!-- ===================== 4. THE 14 GATES ===================== -->
+<div class="sec">
+  <h2><i>04</i> The chain <em>— preflight → ticket → delegate → converge → verify → observe</em></h2>
+  <div class="gates">
+    <div class="g"><span class="n">G1</span><h5>Preflight</h5><p>key, executor, repo state. Catches the rc=0 no-op.</p></div>
+    <div class="g"><span class="n">G2</span><h5>Prior art</h5><p>recorded search before any code: <code>lookup</code>.</p></div>
+    <div class="g"><span class="n">G3</span><h5>Ticket</h5><p>SPEC + brief scaffolded; no spec, no ticket.</p></div>
+    <div class="g"><span class="n">G4</span><h5>Brief lint</h5><p>five sections, observed facts, expected artifacts.</p></div>
+    <div class="g"><span class="n">G5</span><h5>Isolation</h5><p>one working tree per ticket, lock on the second.</p></div>
+    <div class="g"><span class="n">G6</span><h5>Watchdog</h5><p>no event in N seconds ⇒ kill, mark stalled.</p></div>
+    <div class="g"><span class="n">G7</span><h5>Integrity</h5><p>artifacts hashed and compared with truth.</p></div>
+    <div class="g"><span class="n">G8</span><h5>Convergence</h5><p>report must cite real <code>file:line</code>.</p></div>
+    <div class="g"><span class="n">G9</span><h5>Per-CR test</h5><p>the named case is executed, not trusted.</p></div>
+    <div class="g"><span class="n">G10</span><h5>Tests + baseline</h5><p>only <em>new</em> reds fail; 0 collected is never green.</p></div>
+    <div class="g"><span class="n">G11</span><h5>Patch coverage</h5><p>changed lines must have run: Go / Python.</p></div>
+    <div class="g"><span class="n">G12</span><h5>Format</h5><p>normalize before judging; no CRLF false red.</p></div>
+    <div class="g"><span class="n">G13</span><h5>Ledger</h5><p>rc, cost, <code>settled</code>; metrics derived.</p></div>
+    <div class="g"><span class="n">G14</span><h5>Watchdog of use</h5><p>alerts when the workflow is bypassed.</p></div>
+  </div>
+</div>
+
+<!-- ===================== 5. PRINCIPLES + NUMBERS ===================== -->
+<div class="sec">
+  <h2><i>05</i> Why it holds up <em>— and what it cost to build</em></h2>
+  <div class="cols">
+    <div class="pr">
+      <h4>Five rules the design refuses to break</h4>
+      <ol>
+        <li><b>Self-reports do not count.</b> Executor output becomes evidence only when a command returns rc=0 on a machine-checkable artifact. “Verified”, “should work”, “looks good” are not results.</li>
+        <li><b>A red baseline is data, not failure.</b> Real repositories arrive red. Record the red set once, then fail only on <em>new</em> reds — a gate that cries wolf is ignored within a week.</li>
+        <li><b>Exemptions are explicit and versioned.</b> Untestable files go into <code>.diffcovignore</code> with a reason, in the diff. Thresholds are never quietly lowered.</li>
+        <li><b>Gates about gates are tested in a sandbox.</b> A checker cannot validate itself: inject a known failure, watch it go red, fix, watch it go green.</li>
+        <li><b>Scope the measurement to the ticket.</b> <code>git diff HEAD</code> includes other people’s uncommitted work; measuring it produces a meaningless number.</li>
+      </ol>
+    </div>
+    <div class="stats">
+      <div class="st"><div class="v">14</div><div class="l">gates — every one exercised with an injected failure before release</div></div>
+      <div class="st"><div class="v">32<small>/32</small></div><div class="l">changed lines executed — first ticket on a real private repo</div></div>
+      <div class="st"><div class="v">$0.013</div><div class="l">cost of that ticket: 38.9k in / 25.9k out tokens, 6–11 min</div></div>
+      <div class="st"><div class="v">0</div><div class="l">third-party dependencies — Bash + Python stdlib only</div></div>
+      <div class="st" style="grid-column:span 2"><div class="v" style="font-size:19px">Also measured</div><div class="l">5 real defects found in these very tools <em>by the gates themselves</em> (a checker that skipped non-Go repos, a report that overwrote another ticket’s evidence, a coverage run that took 6 min → 60 s after caching by code object).</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="qs">
+    <div class="qs-l"><h4>Start in 60 seconds</h4><p>Nothing to configure: clone, install, open a ticket. Only the delegation step needs a key — all 14 gates run offline.</p></div>
+    <div class="qs-r mono">
+      <div><span class="c">$</span> git clone https://github.com/PoorThoth/heavy-coding</div>
+      <div><span class="c">$</span> cd heavy-coding &amp;&amp; ./install.sh</div>
+      <div><span class="c">$</span> wfctl task . my-first-ticket "add retry to fetch_user"</div>
+      <div><span class="c">$</span> wfctl deleg . .agents/tasks/my-first-ticket/brief.md</div>
+      <div><span class="c">$</span> wfctl verify . <span class="k"># tests · patch coverage · convergence · ledger</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div>Heavy Coding · v1.0.0 · first public release · 2026-11-25 · MIT © Ling Guiqian</div>
+  <div class="rt"><span>zero tokens spent by any gate — only the delegation costs money</span><b>github.com/PoorThoth/heavy-coding</b></div>
+</div>
+
+</body>
+</html>

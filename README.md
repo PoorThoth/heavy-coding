@@ -2,6 +2,10 @@
 
 **A gate-based workflow for delegating real code changes to an AI agent — where every gate is an exit code, not a claim.**
 
+![Heavy Coding: seven hallucinations of AI coding, and the gate that kills each one](docs/diagram.png)
+
+<sub>Full-size poster: [docs/diagram.png](docs/diagram.png) · source: [docs/poster.html](docs/poster.html)</sub>
+
 Coding agents are unreliable narrators. They say "done", "all tests pass", "I fixed it" — and the repo says otherwise. Heavy Coding wraps a delegated coding session in fourteen checkpoints that can only be passed by a machine-checkable fact: a test that actually ran, a diff line that was actually executed, a report that actually converges with the spec.
 
 It is ~2.5k lines of dependency-free Bash + Python. No framework, no server, no vendor SDK.

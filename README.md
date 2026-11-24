@@ -2,6 +2,12 @@
 
 **English** · [简体中文](README.zh-CN.md)
 
+[![version](https://img.shields.io/badge/version-1.0.0--beta.1-orange)](https://github.com/PoorThoth/heavy-coding/releases)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![gates](https://img.shields.io/badge/gates-14-black)](docs/GATES.md)
+
+> **Status: `1.0.0-beta.1` — first public beta.** The workflow has been in daily use for months; this is the first release shaped for someone else's machine. During the beta, command names, flags and rc codes may still change. Tested mainly on Windows + Git-Bash; Linux/macOS expected, not yet verified; Node patch coverage reports SKIP. See [CHANGELOG.md](CHANGELOG.md).
+
 **A gate-based workflow for delegating real code changes to an AI agent — where every gate is an exit code, not a claim.**
 
 ![Heavy Coding: seven hallucinations of AI coding, and the gate that kills each one](docs/diagram.png)
@@ -114,6 +120,7 @@ Every document ships in both languages — English file is the base name, Chines
 | Heavy-mode reference | [skills/grill-then-implement/SKILL.md](skills/grill-then-implement/SKILL.md) | [skills/grill-then-implement/SKILL.zh-CN.md](skills/grill-then-implement/SKILL.zh-CN.md) |
 | Sandbox: break a gate yourself | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
 | One-page poster | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
+| Changelog | [CHANGELOG.md](CHANGELOG.md) | [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md) |
 
 **Ticket templates follow the language switch.** `wfctl task` scaffolds from `templates/task/*.tpl` (Chinese by default). Set `WF_TEMPLATE_LANG=en` and it uses `*.md.en.tpl` + `preamble.en.txt` instead, so an English user gets an English SPEC/brief/convergence report. Any unknown language falls back to Chinese.
 

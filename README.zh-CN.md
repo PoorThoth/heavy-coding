@@ -2,6 +2,12 @@
 
 [English](README.md) · **简体中文**
 
+[![版本](https://img.shields.io/badge/version-1.0.0--beta.1-orange)](https://github.com/PoorThoth/heavy-coding/releases)
+[![许可](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![门禁](https://img.shields.io/badge/gates-14-black)](docs/GATES.zh-CN.md)
+
+> **当前版本 `1.0.0-beta.1` —— 首个公开测试版。** 这套工作流已经在日常开发里用了数月，这一版是第一次按「别人的机器」来打包。beta 期间命令名、参数与退出码仍可能变化。主测 Windows + Git-Bash；Linux/macOS 预期可用但未实机验证；Node 的改动行覆盖报 SKIP。变更见 [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md)。
+
 **给 AI 执行器上十四道闸的代码工作流 —— 每道闸只认退出码，不认自述。**
 
 ![Heavy Coding 一图流：七种 AI 编程幻觉，以及各自由哪道门杀死](docs/diagram.zh-CN.png)
@@ -100,6 +106,7 @@ export WF_DIFFCOV_PATHS=src/mod.py,tests/test_mod.py    # 只测本票动过的�
 | 重模式全链参考 | [skills/grill-then-implement/SKILL.md](skills/grill-then-implement/SKILL.md) | [skills/grill-then-implement/SKILL.zh-CN.md](skills/grill-then-implement/SKILL.zh-CN.md) |
 | 沙盒：亲手弄红一次 | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
 | 一图流 | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
+| 变更日志 | [CHANGELOG.md](CHANGELOG.md) | [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md) |
 
 **票面模板跟语言开关走。** `wfctl task` 从 `templates/task/*.tpl` 生成票（默认中文）。设 `WF_TEMPLATE_LANG=en` 就改用 `*.md.en.tpl` 与 `preamble.en.txt`，英文使用者拿到的是英文 SPEC/brief/收敛报告；不认识的语言自动回落中文。
 

@@ -101,6 +101,10 @@ export WF_DIFFCOV_PATHS=src/mod.py,tests/test_mod.py    # 只测本票动过的�
 | 沙盒：亲手弄红一次 | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
 | 一图流 | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
 
+**票面模板跟语言开关走。** `wfctl task` 从 `templates/task/*.tpl` 生成票（默认中文）。设 `WF_TEMPLATE_LANG=en` 就改用 `*.md.en.tpl` 与 `preamble.en.txt`，英文使用者拿到的是英文 SPEC/brief/收敛报告；不认识的语言自动回落中文。
+
+下面这些暂时只有中文（内部工作笔记，不是入口）：`templates/delegation-prompts.md`、`templates/large-task-decomposition.md`、`templates/harness/README.md`、`templates/acceptance-checklist.md`、`templates/grill-quality-gate.md`、`skills/code-gate/references/gate-adoption.md`。需要就说话，我翻。
+
 ## 这套工作流是怎么来的
 
 这套项目，是我作为一个中国的个人 AI 代码编程者，在重度使用 DeepSeek 做日常开发、也做大型严格项目的过程中，一点点打磨出来的。

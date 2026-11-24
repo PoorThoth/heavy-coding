@@ -1324,8 +1324,12 @@ cmd_deleg() {
   # 【执行环境优先级】：任务书 > 任何技能（superpowers 等）的默认流程。实测(2026-10-08)：Pi 挂着官方 6.4.2 后，
   # brainstorming 要审批门、writing-plans 往 docs/superpowers/ 写、using-git-worktrees 会停下来问 —— 无人值守会因此断链。
   local pre=""
-  if [ -z "${WF_NO_PREAMBLE:-}" ] && [ -f "$SKILL_ROOT/templates/task/preamble.txt" ]; then
-    pre="$(cat "$SKILL_ROOT/templates/task/preamble.txt")"
+  local _pre_f="$SKILL_ROOT/templates/task/preamble.txt"
+  if [ -n "${WF_TEMPLATE_LANG:-}" ] && [ -f "$SKILL_ROOT/templates/task/preamble.${WF_TEMPLATE_LANG}.txt" ]; then
+    _pre_f="$SKILL_ROOT/templates/task/preamble.${WF_TEMPLATE_LANG}.txt"
+  fi
+  if [ -z "${WF_NO_PREAMBLE:-}" ] && [ -f "$_pre_f" ]; then
+    pre="$(cat "$_pre_f")"
   fi
   case "$agent" in
     pi)

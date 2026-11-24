@@ -115,6 +115,10 @@ Every document ships in both languages — English file is the base name, Chines
 | Sandbox: break a gate yourself | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
 | One-page poster | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
 
+**Ticket templates follow the language switch.** `wfctl task` scaffolds from `templates/task/*.tpl` (Chinese by default). Set `WF_TEMPLATE_LANG=en` and it uses `*.md.en.tpl` + `preamble.en.txt` instead, so an English user gets an English SPEC/brief/convergence report. Any unknown language falls back to Chinese.
+
+Still Chinese-only for now (working notes, not entry points): `templates/delegation-prompts.md`, `templates/large-task-decomposition.md`, `templates/harness/README.md`, `templates/acceptance-checklist.md`, `templates/grill-quality-gate.md`, `skills/code-gate/references/gate-adoption.md`. Ask and I'll translate them.
+
 ## How this came about
 
 I'm a solo AI-first developer based in China. This project was worn into shape, little by little, while using DeepSeek heavily — for day-to-day development, and for large projects with strict requirements.

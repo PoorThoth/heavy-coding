@@ -46,3 +46,5 @@ Write with whatever agent you like. What we do not accept is a change you cannot
 ## Where to start
 
 `docs/GATES.md` lists the 14 gates and what rc each one returns. `examples/lab` lets you break a gate on purpose in 60 seconds — the fastest way to see what this project actually checks.
+
+<!-- vouch PR path self-test: author is admin, expect skipped -->

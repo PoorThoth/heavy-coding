@@ -1,16 +1,18 @@
-# 沙盒：亲手弄红一次
+# Sandbox: break a gate with your own hands
+
+English · [简体中文](README.zh-CN.md)
 
 ```bash
 cd examples/lab
-bash $WF task . demo "把 whisper 改成句尾加感叹号"     # ① 建票
-# ② SPEC 里写一条 CR1，带 [test: tests/test_demo.py::test_whisper]
-bash $WF converge . .agents/tasks/demo/SPEC.md --strict # → rc=3/2（报告还没写）
+bash $WF task . demo "make whisper end with an exclamation mark"      # ① open a ticket
+# ② write CR1 in the SPEC with [test: tests/test_demo.py::test_whisper]
+bash $WF converge . .agents/tasks/demo/SPEC.md --strict               # → rc=3/2 (no report yet)
 ```
 
-三种最值得亲手试一次的红：
+Three reds worth causing once, by hand:
 
-| 注入 | 命令 | 期望 |
+| Injection | Command | Expected |
 |---|---|---|
-| 报告里不写 `文件:行` | `wfctl converge … --strict` | rc=3（未收敛） |
-| CR 指向不存在的用例 | 同上 | rc=2（测试证据不成立） |
-| 改了代码不加测试 | `wfctl verify .` | diffcov rc=5，逐个点名未执行行 |
+| report cites no `file:line` | `wfctl converge … --strict` | rc=3 (not converged) |
+| CR points at a case that does not exist | same | rc=2 (test evidence does not hold) |
+| code changed, no test added | `wfctl verify .` | diffcov rc=5, naming every uncovered line |

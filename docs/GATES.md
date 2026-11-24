@@ -1,5 +1,8 @@
 # The gates
 
+English · [简体中文](GATES.zh-CN.md)
+
+
 Every gate below returns an exit code. Nothing here asks you to trust a summary.
 
 ```

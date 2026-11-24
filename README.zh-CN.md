@@ -88,6 +88,19 @@ export WF_DIFFCOV_PATHS=src/mod.py,tests/test_mod.py    # 只测本票动过的�
 4. **改门禁必须在沙盒里验证。**检查器不能自证：注入一个已知失败，看它红；修好，看它绿。
 5. **度量范围圈到本票。**`git diff HEAD` 会带上别人未提交的 WIP，量出来的数字毫无意义。
 
+## 文档（中英文对照）
+
+每份文档都有中英两版：英文版是基础文件名，中文版是 `<名字>.zh-CN.md`，两个版本顶部互相切换。
+
+| 主题 | English | 简体中文 |
+|---|---|---|
+| 每一道门、每一个 rc | [docs/GATES.md](docs/GATES.md) | [docs/GATES.zh-CN.md](docs/GATES.zh-CN.md) |
+| 红基线流程 | [docs/BASELINE.md](docs/BASELINE.md) | [docs/BASELINE.zh-CN.md](docs/BASELINE.zh-CN.md) |
+| 80 行 runbook（轻/重模式） | [skills/code-gate/SKILL.md](skills/code-gate/SKILL.md) | [skills/code-gate/SKILL.zh-CN.md](skills/code-gate/SKILL.zh-CN.md) |
+| 重模式全链参考 | [skills/grill-then-implement/SKILL.md](skills/grill-then-implement/SKILL.md) | [skills/grill-then-implement/SKILL.zh-CN.md](skills/grill-then-implement/SKILL.zh-CN.md) |
+| 沙盒：亲手弄红一次 | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
+| 一图流 | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
+
 ## 这套工作流是怎么来的
 
 这套项目，是我作为一个中国的个人 AI 代码编程者，在重度使用 DeepSeek 做日常开发、也做大型严格项目的过程中，一点点打磨出来的。

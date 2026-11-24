@@ -102,6 +102,19 @@ Fourteen gates, grouped by what they refuse to believe. Full detail and the rc t
 4. **Gates about gates must be tested in a sandbox.** Changing a checker cannot be validated by that checker: inject a known failure, watch it go red, fix, watch it go green.
 5. **Scope the measurement to the ticket.** `git diff HEAD` includes other people's uncommitted work; measuring it produces a meaningless number.
 
+## Documents
+
+Every document ships in both languages — English file is the base name, Chinese is `<name>.zh-CN.md`.
+
+| Topic | English | 简体中文 |
+|---|---|---|
+| Every gate, every rc | [docs/GATES.md](docs/GATES.md) | [docs/GATES.zh-CN.md](docs/GATES.zh-CN.md) |
+| The red baseline procedure | [docs/BASELINE.md](docs/BASELINE.md) | [docs/BASELINE.zh-CN.md](docs/BASELINE.zh-CN.md) |
+| 80-line runbook (light/heavy) | [skills/code-gate/SKILL.md](skills/code-gate/SKILL.md) | [skills/code-gate/SKILL.zh-CN.md](skills/code-gate/SKILL.zh-CN.md) |
+| Heavy-mode reference | [skills/grill-then-implement/SKILL.md](skills/grill-then-implement/SKILL.md) | [skills/grill-then-implement/SKILL.zh-CN.md](skills/grill-then-implement/SKILL.zh-CN.md) |
+| Sandbox: break a gate yourself | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
+| One-page poster | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
+
 ## How this came about
 
 I'm a solo AI-first developer based in China. This project was worn into shape, little by little, while using DeepSeek heavily — for day-to-day development, and for large projects with strict requirements.

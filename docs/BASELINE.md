@@ -1,5 +1,8 @@
 # The red baseline
 
+English · [简体中文](BASELINE.zh-CN.md)
+
+
 ## The problem
 
 A real repository is rarely green when you open it. Before the first ticket on any repo, run:

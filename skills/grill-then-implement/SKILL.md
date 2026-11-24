@@ -1,6 +1,6 @@
 ---
 name: grill-then-implement
-description: "重模式全链参考:质询→SPEC→委托→收敛→验收，每道门的判据与坑。"
+description: "Heavy-mode reference: interrogate → SPEC → delegate → converge → accept; the criteria and pitfalls of every gate."
 version: 2.0.0
 author: Heavy Coding
 license: MIT
@@ -9,77 +9,79 @@ metadata:
     tags: [workflow, delegation, spec, converge]
 ---
 
-# grill-then-implement —— 重模式全链参考
+# grill-then-implement — the heavy-mode reference
 
-> 日常只需要 `skills/code-gate/SKILL.md`（80 行 runbook）。这个文件回答「为什么这么设计、某道门到底卡什么」。
-> 所有门的机器判据在 [`docs/GATES.md`](../../docs/GATES.md)，红基线流程在 [`docs/BASELINE.md`](../../docs/BASELINE.md)。
+English · [简体中文](SKILL.zh-CN.md)
 
-## 一、这一套解决什么
+> Day to day you only need `skills/code-gate/SKILL.md` (the 80-line runbook). This file answers "why is it designed this way, and what exactly does each gate stop".
+> Machine criteria for every gate: [`docs/GATES.md`](../../docs/GATES.md). Red-baseline procedure: [`docs/BASELINE.md`](../../docs/BASELINE.md).
 
-委托给 AI 执行器的真实代码改动，有四种"看起来成功"的静默失效：凭据缺失却 rc=0、测试压根没被收集、测试全绿但新代码不被调用、收敛报告里的 `文件:行` 根本不存在。四种都不能靠读执行器的自述发现，只能靠一个会**大声失败**的检查点。
+## 1. What it solves
 
-因此每一道门都必须满足三件事：
+A delegated real code change has four silent failure modes that all look like success: missing credentials with rc=0, tests that were never collected, a green suite that never calls the new code, and a convergence report whose `file:line` does not exist. None of them is visible by reading the executor's prose — only a checkpoint that **fails loudly** catches them.
 
-1. 有自己的**退出码**，且非零有意义（`0` 只能由"机验事实成立"给出）；
-2. 有**可复现的注入方式**——你知道怎么把它弄红，才知道它没坏；
-3. 失败信息直接给**位置**（`文件:行`、`用例名`、`未覆盖行号`），而不是"请检查"。
+So every gate must satisfy three things:
 
-## 二、链的形状
+1. it has its own **exit code**, and non-zero means something specific (`0` is only earned by a machine-checkable fact);
+2. it has a **reproducible way to be made red** — you have to know how to break it before you can claim it works;
+3. its failure output names the **location** (`file:line`, case name, uncovered line numbers), not "please check".
+
+## 2. Shape of the chain
 
 ```
 preflight → task(SPEC+brief) → lookup → deleg → converge → verify → ledger/stats
-                                        ↘ dispatch_verify（产物完整性）
+                                        ↘ dispatch_verify (artifact integrity)
 ```
 
-| 阶段 | 命令 | 卡什么 | 非零含义 |
+| Stage | Command | What it stops | Non-zero means |
 |---|---|---|---|
-| 0 就绪 | `wfctl preflight` | 执行器在不在、key 在不在、仓库脏不脏 | 1 = 缺前置 |
-| 1 任务 | `wfctl task` | 没有 SPEC 就没有票 | — |
-| 2 检索 | `wfctl lookup` | 先查现成，拒绝重复造轮子 | 1 = 缺记录 |
-| 3 委托 | `wfctl deleg` | brief 缺 `实测事实:` / `expect:` | 5 = 缺实测行；3 = 预期产物没落地；4 = 并发锁；7 = 没 settle；124 = 停滞 |
-| 4 产物 | `dispatch_verify.py` | 产物被改、越界、数量或真值不符 | 2/3/4/5 |
-| 5 收敛 | `wfctl converge --strict` | 报告与 SPEC、代码、测试三向是否一致 | 2 = 报告/测试证据不成立；3 = 未收敛 |
-| 6 验收 | `wfctl verify` | 测试（含既有红基线）+ 改动行覆盖 + 收敛 + 账本 | 任一项非零 |
-| 7 观测 | `wfctl stats` / `gate_watch.py` | 返工率、白跑率、以及"流程是不是又没人用了" | 3 = 账本空 |
+| 0 ready | `wfctl preflight` | executor present, key present, repo state known | 1 = precondition missing |
+| 1 ticket | `wfctl task` | no SPEC, no ticket | — |
+| 2 prior art | `wfctl lookup` | reinventing the wheel | 1 = no record |
+| 3 delegate | `wfctl deleg` | brief without `实测事实:` / `expect:` | 5 = no observed-facts line; 3 = expected artifact never landed; 4 = concurrent lock; 7 = never settled; 124 = stalled |
+| 4 artifacts | `dispatch_verify.py` | artifacts edited, out of scope, wrong count, wrong content | 2/3/4/5 |
+| 5 converge | `wfctl converge --strict` | whether report, SPEC, code and tests agree | 2 = report or test evidence broken; 3 = not converged |
+| 6 accept | `wfctl verify` | tests (incl. known-red baseline) + patch coverage + convergence + ledger | any item non-zero |
+| 7 observe | `wfctl stats` / `gate_watch.py` | rework rate, wasted runs, and "is anyone using this at all" | 3 = empty ledger |
 
-## 三、SPEC 怎么写才卡得住
+## 3. How to write a SPEC that actually holds
 
-- 一条 CR 一件事，判据写"能被命令证伪"的形态（`rc=0`、`文件:行` 出现、某函数返回某值），不写"代码质量良好"。
-- 每条 CR 带 `[test: 文件::用例]`。收敛门禁会真跑那一条——不是读报告，是执行。
-- 真的测不了（脚本顶层就调线上 API、codegen 产物）写 `[test: n/a: ≥8 字理由]`，并把文件列进 `.diffcovignore`。豁免会被打印出来。
-- **边界要写死**：允许动哪些文件、禁止跑什么（真 API、真库、push）、仓库里已有的未提交改动一律不碰。
+- One CR per requirement; phrase the criterion so a command can falsify it (`rc=0`, `file:line` present, a function returns a given value). Never "code quality is good".
+- Every CR carries `[test: file::case]`. The convergence gate **runs** that case — it does not read the report.
+- Genuinely untestable (a script whose top level calls a live API, a codegen artifact): write `[test: n/a: reason ≥8 chars]` and list the file in `.diffcovignore`. Exemptions are printed.
+- **Write the boundaries down**: which files may change, what must not be run (live API, real DB, push), and that pre-existing uncommitted work is off limits.
 
-## 四、brief 怎么写才不幻觉
+## 4. How to write a brief that does not hallucinate
 
-五段式：① 任务一句话 ② 现成答案检索结论 ③ 事实与资料（**已经侦察好的，不让执行器重新探索**）④ 步骤（assess / fix / test / 收口）⑤ 硬性约束。
+Five sections: ① the task in one sentence ② prior-art conclusion ③ facts and material (**already scouted — the executor must not re-explore**) ④ steps (assess / fix / test / close) ⑤ hard constraints.
 
-外加两行机器读的：
+Plus two machine-read lines:
 
-- `实测事实: <今天真的跑过什么、输出是什么>` —— 没有这行 `deleg` 直接 rc=5；
-- `expect: <必须产出的文件>` —— 缺了 `deleg` 报 rc=3。
+- `实测事实: <what was actually run today and what it printed>` — without it `deleg` returns rc=5;
+- `expect: <files that must be produced>` — missing it, `deleg` returns rc=3.
 
-一段"事实与资料"能省掉执行器一半的瞎逛；一段"硬性约束"能省掉一次事故。
+One good "facts" section saves half the executor's wandering; one good "constraints" section saves an incident.
 
-## 五、验收阶段的三条硬规矩
+## 5. Three hard rules at acceptance
 
-1. **不信自述**：执行器说"测试通过"不算，宿主自己跑一遍，贴 rc。
-2. **红基线先钉**：真项目开工就是红的（数据漂移、历史待修）。先 `testbaseline` 记录，之后只对**新增**失败发红。红基线文件是普通文本，进 diff 可复查。
-3. **测度量要圈定范围**：`git diff HEAD` 会把别人未提交的 WIP 算成这一票的改动，覆盖率瞬间变成噪音。用 `WF_DIFFCOV_PATHS` 只测本票文件；真的测不了的用 `.diffcovignore` 显式豁免，**绝不偷偷降阈值**。
+1. **Self-reports do not count.** "Tests pass" from the executor is not evidence: the host runs it and pastes the rc.
+2. **Pin the red baseline first.** Real repos are red when you arrive (data drift, long-standing breakage). Record it with `testbaseline`, then fail only on **new** reds. The baseline file is plain text and lives in the diff.
+3. **Scope the measurement.** `git diff HEAD` counts other people's uncommitted work as this ticket's change, which turns coverage into noise. Use `WF_DIFFCOV_PATHS`; use `.diffcovignore` for files that truly cannot be tested — **never quietly lower the threshold**.
 
-## 六、常见坑（都踩过）
+## 6. Pitfalls (all of them happened)
 
-| 坑 | 现象 | 修法 |
+| Pitfall | Symptom | Fix |
 |---|---|---|
-| 凭据静默缺失 | 执行器 rc=0、无输出 | `wfctl envcheck`；wfctl 自动从 `$HC_HOME/.env` 加载并只报长度 |
-| 测试命令假红 | 本机 `python` 没有 pytest | 用 PATH 上能跑的 `pytest -q`，别硬编码 `python -m pytest` |
-| 同日报告互相覆盖 | 一票把另一票的证据表冲掉 | 报告按 `<slug>-<date>` 命名，`--init` 永不回写已有报告 |
-| 指针归属错 | 理由里提了"已被 CR1 覆盖"，指针算到 CR1 | 指针只归本行第一条 CR |
-| 占位没填 | `<tests/x.py>::<case>` 骗过检查 | 检出 `<` 即判"占位没填" |
-| 无 `internal/` 的 Go 仓跳过测试 | verify 假绿 | `go test ./...` |
-| settrace 太慢 | 全套 300 例 6 分钟 | 按 code object 缓存归属文件 → 60 秒 |
-| 文档字符串算未覆盖 | 改一句注释覆盖率归零 | `ast` 排除 docstring 行 |
-| 空描述仍发注解属性 | 发了条空的 4191 | 空描述不发，由"补描述"解决 |
+| credentials silently missing | executor rc=0, no output | `wfctl envcheck`; wfctl auto-loads `$HC_HOME/.env` and prints only the length |
+| test command falsely red | local `python` has no pytest | use the `pytest -q` that runs on PATH; never hardcode `python -m pytest` |
+| same-day reports overwrite each other | one ticket wipes another's evidence table | report named `<slug>-<date>`; `--init` never rewrites an existing report |
+| pointer attribution | a reason mentioning "already covered by CR1" gets the pointer assigned to CR1 | a pointer belongs to the first CR on its own line only |
+| placeholder passes as filled | `<tests/x.py>::<case>` slips through | any `<` ⇒ "placeholder not filled" |
+| Go repo without `internal/` skips tests | verify is falsely green | `go test ./...` |
+| settrace too slow | 300 tests take 6 minutes | cache file ownership per code object → 60 s |
+| docstrings count as uncovered | changing one comment zeroes coverage | exclude docstring ranges via `ast` |
+| empty description still emits the annotation attribute | an empty attribute is sent | no description ⇒ no annotation; fix the description instead |
 
-## 七、成本
+## 7. Cost
 
-一票真实改动（两个文件 + 5 条用例）在 DeepSeek 上约 **$0.013**、6–11 分钟、39k in / 26k out。门禁本身零 token（纯脚本），`gate_watch` 也零 token。真正花钱的只有 `deleg` 那一次。
+A real change (two files + 5 tests) on DeepSeek cost about **$0.013**, 6–11 minutes, 39k in / 26k out. The gates themselves spend zero tokens (pure scripts), and `gate_watch` is free too. Only the single `deleg` call costs money.

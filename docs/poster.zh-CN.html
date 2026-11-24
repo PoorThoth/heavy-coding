@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Heavy Coding —— 终结 AI 编程幻觉</title>
+<style>
+  :root{
+    --bg:#eef1f6; --card:#fff; --line:#dfe5ee; --ink:#0b1220; --muted:#5a6577;
+    --navy:#0f1d33; --navy2:#16294a;
+    --red:#c02436; --redbg:#fdf2f3; --redline:#f2c9cf;
+    --grn:#0d6e5e; --grnbg:#effaf7; --grnline:#bfe6dd;
+    --amb:#a5600a;
+    --blue:#1d4ed8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Microsoft YaHei UI","Microsoft YaHei","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);
+       width:1760px;padding:0 0 30px;-webkit-font-smoothing:antialiased}
+  .mono{font-family:Consolas,"Microsoft YaHei UI",monospace}
+
+  /* ---------- header ---------- */
+  .hero{background:var(--navy);color:#fff;padding:30px 46px 26px;position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;right:-120px;top:-140px;width:520px;height:520px;
+    background:radial-gradient(circle,rgba(192,36,54,.34),transparent 62%);}
+  .hero .row{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+  .hero h1{font-size:52px;letter-spacing:-1.6px;font-weight:800;line-height:1}
+  .hero h1 span{color:#ff5b6e}
+  .hero .sub{margin-top:12px;font-size:19px;color:#c8d4e6;letter-spacing:-.2px}
+  .hero .sub b{color:#fff;font-weight:700}
+  .hero .meta{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;max-width:620px}
+  .chip{font-size:12.5px;font-weight:700;border:1px solid rgba(255,255,255,.28);border-radius:999px;
+        padding:7px 14px;color:#dbe5f2}
+  .chip.hot{border-color:#ff5b6e;color:#ffd0d6;background:rgba(192,36,54,.18)}
+  .def{margin-top:22px;display:grid;grid-template-columns:1.06fr .94fr;gap:14px;position:relative;z-index:2}
+  .def .box{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:15px 18px}
+  .def .box h4{font-size:13px;letter-spacing:.9px;text-transform:uppercase;color:#93a7c4;font-weight:800;margin-bottom:9px}
+  .def .box p{font-size:15.2px;line-height:1.55;color:#e8eef8}
+  .def .box p b{color:#fff}
+  .def .box p code{font-family:Consolas,monospace;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:5px;font-size:14px}
+  .def .box .kx{color:#ff8f9c;font-weight:700}
+
+  /* ---------- section shell ---------- */
+  .sec{margin:16px 46px 0}
+  .sec > h2{font-size:15px;letter-spacing:1.1px;text-transform:uppercase;color:#67748a;font-weight:800;
+            display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .sec > h2 i{font-style:normal;background:var(--navy);color:#fff;font-size:12px;padding:4px 9px;border-radius:7px;letter-spacing:.5px}
+  .sec > h2 em{font-style:normal;font-weight:600;text-transform:none;letter-spacing:0;color:#8b95a7;font-size:13px}
+
+  /* ---------- claim cards ---------- */
+  .claims{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cl{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:0;overflow:hidden;
+      box-shadow:0 1px 2px rgba(11,18,32,.04),0 12px 26px -20px rgba(11,18,32,.35)}
+  .cl .say{padding:13px 16px 12px;background:var(--redbg);border-bottom:1px solid var(--redline);position:relative}
+  .cl .say .who{font-size:10.6px;font-weight:800;letter-spacing:.9px;color:#9d2734;text-transform:uppercase;margin-bottom:6px}
+  .cl .say p{font-size:17px;line-height:1.32;font-weight:700;color:#7d1a26;letter-spacing:-.2px}
+  .cl .say p:before{content:"“"}
+  .cl .say p:after{content:"”"}
+  .cl .real{padding:12px 16px 13px}
+  .cl .real .t{font-size:10.6px;font-weight:800;letter-spacing:.9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  .cl .real p{font-size:13.4px;line-height:1.5;color:#2a3444}
+  .cl .real code{font-family:Consolas,monospace;font-size:12.4px;background:#f1f4f9;border:1px solid #e4e9f2;
+                 padding:0 5px;border-radius:4px;color:#0b3a8a}
+  .cl .kill{padding:9px 16px 11px;background:var(--grnbg);border-top:1px solid var(--grnline);
+            display:flex;align-items:center;gap:9px}
+  .cl .kill .g{font-size:11.5px;font-weight:800;color:#fff;background:var(--grn);border-radius:6px;padding:3px 8px;flex:none}
+  .cl .kill .x{font-size:12.6px;color:#0b4f43;font-weight:600;line-height:1.35}
+  .cl .kill .x b{font-family:Consolas,monospace;color:#8a1220}
+
+  .banner{margin-top:12px;background:var(--navy);color:#c8d4e6;border-radius:12px;padding:13px 18px;
+          display:flex;gap:14px;align-items:flex-start;font-size:13.2px;line-height:1.5}
+  .banner b{flex:none;background:#5ee2aa;color:#062b22;font-size:11.5px;font-weight:800;letter-spacing:.8px;
+            padding:4px 9px;border-radius:6px;margin-top:1px}
+  .banner code{font-family:Consolas,monospace;background:rgba(255,255,255,.1);padding:0 5px;border-radius:4px;color:#ffd479}
+  .banner em{font-style:normal;color:#fff;font-weight:700}
+
+  /* ---------- kill table ---------- */
+  .tbl{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;
+       box-shadow:0 1px 2px rgba(11,18,32,.04),0 12px 26px -20px rgba(11,18,32,.35)}
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  th{background:#f7f9fc;font-size:11.4px;letter-spacing:.7px;text-transform:uppercase;color:#6b7688;
+     text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:800}
+  td{padding:9px 14px;border-bottom:1px solid #eef2f7;font-size:13.2px;line-height:1.4;vertical-align:top;color:#26303f}
+  tr:last-child td{border-bottom:0}
+  td.m{font-family:Consolas,monospace;font-weight:700;color:#7d1a26;font-size:12.6px}
+  td.e{font-family:Consolas,monospace;font-size:12.4px;color:#0b3a8a}
+  td b{font-weight:700;color:#0b1220}
+  .rcb{display:inline-block;font-family:Consolas,monospace;font-weight:800;font-size:12px;padding:2px 7px;
+       border-radius:5px;background:#fff1f2;color:#9d2734;border:1px solid #f3cfd4}
+  .rc0{background:#effaf7;color:#0d6e5e;border-color:#bfe6dd}
+
+  /* ---------- terminal ---------- */
+  .term{background:#0c1526;border-radius:13px;padding:16px 20px 15px;color:#c9d6e8;font-family:Consolas,monospace;
+        font-size:13.2px;line-height:1.62;border:1px solid #1d2b45;overflow:hidden}
+  .term .bar{display:flex;gap:6px;margin-bottom:10px}
+  .term .bar i{width:9px;height:9px;border-radius:50%;background:#33415c;display:block}
+  .term .p{color:#8fe3c8}
+  .term .ok{color:#5ee2aa}
+  .term .no{color:#ff8098}
+  .term .dim{color:#7c8aa3}
+  .term .hl{color:#ffd479}
+
+  /* ---------- 14 gates ---------- */
+  .gates{display:grid;grid-template-columns:repeat(7,1fr);gap:9px}
+  .g{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 11px 11px;
+     box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .g .n{font-size:10.4px;font-weight:800;color:#fff;background:var(--navy);border-radius:5px;padding:2px 6px;
+        display:inline-block;margin-bottom:7px;letter-spacing:.4px}
+  .g h5{font-size:12.9px;font-weight:800;margin-bottom:5px;letter-spacing:-.1px}
+  .g p{font-size:11.5px;line-height:1.44;color:#54606f}
+  .g code{font-family:Consolas,monospace;font-size:11px;background:#f1f4f9;padding:0 4px;border-radius:3px;color:#0b3a8a}
+
+  /* ---------- principles + numbers ---------- */
+  .cols{display:grid;grid-template-columns:1.45fr 1fr;gap:13px}
+  .pr{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px 18px;
+      box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .pr h4{font-size:12.6px;letter-spacing:.8px;text-transform:uppercase;color:#67748a;font-weight:800;margin-bottom:11px}
+  .pr ol{margin-left:0;list-style:none;counter-reset:p}
+  .pr li{counter-increment:p;font-size:13.3px;line-height:1.45;color:#2a3444;padding-left:26px;position:relative;margin-bottom:9px}
+  .pr li:before{content:counter(p);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:6px;
+     background:var(--navy);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
+  .pr li b{color:#0b1220}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .st{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+       box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .st .v{font-family:Consolas,monospace;font-size:25px;font-weight:800;letter-spacing:-1px;color:var(--navy);line-height:1}
+  .st .v small{font-size:14px;font-weight:700;color:#7b8797}
+  .st .l{font-size:11.6px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+  .qs{display:grid;grid-template-columns:.86fr 1.14fr;gap:16px;background:var(--card);border:1px solid var(--line);
+      border-radius:13px;padding:15px 18px;box-shadow:0 1px 2px rgba(11,18,32,.04)}
+  .qs h4{font-size:12.6px;letter-spacing:.8px;text-transform:uppercase;color:#67748a;font-weight:800;margin-bottom:8px}
+  .qs p{font-size:13.2px;line-height:1.5;color:#3a4657}
+  .qs-r{background:#0c1526;border-radius:10px;padding:12px 15px;font-size:12.9px;line-height:1.72;color:#d5e0ef}
+  .qs-r .c{color:#5ee2aa}
+  .qs-r .k{color:#7c8aa3}
+
+  .foot{margin:16px 46px 0;border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;
+        align-items:center;font-size:12.6px;color:#7b8797}
+  .foot b{color:#0b1220;font-family:Consolas,monospace;font-size:13.2px}
+  .foot .rt{display:flex;gap:16px;align-items:center}
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<div class="hero">
+  <div class="row">
+    <div>
+      <h1>HEAVY <span>CODING</span></h1>
+      <p class="sub">AI 不是故意说谎 —— 它会<b>幻觉出成功</b>。<br>这套工作流让每个结论都交一笔过路费：<b>退出码，否则什么都不算</b>。</p>
+    </div>
+    <div class="meta">
+      <span class="chip hot">v1.0.0 · 首次公开发布</span>
+      <span class="chip">MIT</span>
+      <span class="chip">Bash + Python · 零第三方依赖</span>
+      <span class="chip">十四道门</span>
+      <span class="chip">github.com/PoorThoth/heavy-coding</span>
+    </div>
+  </div>
+
+  <div class="def">
+    <div class="box">
+      <h4>问题不在能力，在验收</h4>
+      <p>AI 报「做完了」，用的是<b>产出这个 bug 的同一个上下文</b>。要求它诚实的提示词、同一个模型的自审、跑错测试的绿 CI —— 失败原因都是同一个：<span class="kx">判官就是被告</span>。只要判官换成一个机器可验的事实，循环里就没有任何一步能「既错了又通过」。</p>
+    </div>
+    <div class="box">
+      <h4>这是什么</h4>
+      <p>把一次编程会话包进 <b>14 个检查点</b>。每个检查点只能被机器能验的东西放行：真执行过的用例、真跑过的 diff 行、真的存在的 <code>file:line</code>。执行器的散文从来不算证据 —— <span class="kx">只有产物上的 rc=0 算</span>。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 01 ===================== -->
+<div class="sec">
+  <h2><i>01</i> 七种我们反复遇到的幻觉 <em>—— 一句真实原话、一个真实原因、一道能杀死它的门</em></h2>
+  <div class="claims">
+
+    <div class="cl">
+      <div class="say"><div class="who">执行器 · 40 秒后</div><p>全部测试通过</p></div>
+      <div class="real"><div class="t">实际情况</div><p>pytest 收集到 <b>0 条</b>用例（缺 <code>pythonpath</code>）并退出 0。「绿」等于什么都没跑。</p></div>
+      <div class="kill"><span class="g">G10</span><span class="x">测试 + <b>既有红基线</b></span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">执行器 · rc=0，无任何输出</div><p>做完了</p></div>
+      <div class="real"><div class="t">实际情况</div><p>没有 API key。执行器打印 <code>No API key found</code> 后<b>退出 0</b> —— 一次看起来像成功的静默空转。</p></div>
+      <div class="kill"><span class="g">G1</span><span class="x"><b>envcheck</b> + 账本 <code>settled</code></span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">执行器 · 整套是绿的</div><p>加了重试，测过了</p></div>
+      <div class="real"><div class="t">实际情况</div><p>所有测试都过，但没有任何一条测试调用新函数。新增的行<b>被执行 0 次</b>。</p></div>
+      <div class="kill"><span class="g">G11</span><span class="x">改动行覆盖：<b>32/32 行</b>，否则失败</span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">执行器 · 收敛报告</div><p>CR1 已被测试套件覆盖</p></div>
+      <div class="real"><div class="t">实际情况</div><p>点名的那条用例根本不存在。整套是绿的，说明不了<b>它覆盖了哪条需求</b>。</p></div>
+      <div class="kill"><span class="g">G9</span><span class="x">CR 的测试指针要被<b>真跑</b>，不是被读</span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">执行器 · diff 摘要</div><p>只改了目标文件</p></div>
+      <div class="real"><div class="t">实际情况</div><p>改了 4 个不相干的文件 —— 其中一个还压着别人未提交的改动。</p></div>
+      <div class="kill"><span class="g">G7</span><span class="x"><b>dispatch_verify</b>：产物哈希对真值</span></div>
+    </div>
+
+    <div class="cl">
+      <div class="say"><div class="who">流程本身</div><p>我们按这个流程走</p></div>
+      <div class="real"><div class="t">实际情况</div><p>近一个月 <b>0 张委托票</b>，每次改动都是手改。文档写得很好，没人用。</p></div>
+      <div class="kill"><span class="g">G14</span><span class="x"><b>gate_watch</b> + 运行账本</span></div>
+    </div>
+
+  </div>
+  <div class="banner">
+    <b>铁律</b>
+    <span>结论 → 证据 → 退出码。一个结论如果无法收敛成「返回 0 或非零」的命令，它就不是交付物，是一句话。真测不了的，必须在 SPEC 里写明理由，并且每次运行都打印出来。另外两个，死法相同：<em>「还在做」</em>（30 分钟无事件 → 看门狗 <b>rc=124</b>）、<em>「看着没问题」</em>（读 patch 正是上面四条能通过评审的方式 → <code>converge --strict</code>）。</span>
+  </div>
+</div>
+
+<!-- ===================== 02 ===================== -->
+<div class="sec">
+  <h2><i>02</i> 机器到底查什么 <em>—— 注入、实测、非零</em></h2>
+  <div class="tbl">
+    <table>
+      <colgroup><col style="width:23%"><col style="width:30%"><col style="width:26%"><col style="width:21%"></colgroup>
+      <tr><th>门</th><th>它要的证据</th><th>怎么失败</th><th>真仓实测</th></tr>
+      <tr><td><b>1</b> <code class="mono">envcheck</code></td><td>key 在、执行器能跑、仓库状态已知</td><td>rc=1 并列出查找过的路径；只打印 <code>len=35</code>，绝不打印值</td><td>还没花掉一个 token 就抓住了静默空转</td></tr>
+      <tr><td><b>2-4</b> <code class="mono">lookup</code> · <code class="mono">task</code> · lint</td><td>先查现成的记录；SPEC 每条 CR 一个可测判据；实测事实；预期产物</td><td>rc=1 缺检索记录 · rc=5 缺行首 <code>实测事实:</code></td><td>「重复造轮子」和「满篇假设的任务书」在门口就被拦下</td></tr>
+      <tr><td><b>5-6</b> 隔离 + 看门狗</td><td>一票一个工作区；N 秒内要有新事件</td><td>rc=4 并发锁 · rc=124 杀进程并标记停滞</td><td>两个 agent 在一个工作区会互删改动；挂住的运行不再像在跑</td></tr>
+      <tr><td><b>7</b> <code class="mono">dispatch_verify</code></td><td>声明的产物重新哈希对真值文件：内容、数量、关键字段</td><td>rc=2 被改或越界 · 3 与真值不符 · 4 数量不符 · 5 参数错</td><td>不用重读 diff 就能抓住越界写入</td></tr>
+      <tr><td><b>8-9</b> <code class="mono">converge</code> + CR 测试</td><td>报告在、终判在、每条 CR 都被提到、至少一处真 <code>file:line</code>；那条 CR 点名的用例<b>真被执行</b></td><td>rc=2 报告或测试证据不成立 · rc=3 未收敛</td><td>SPEC ↔ 代码 ↔ 测试三向一致，靠机器而不是「整套绿了」</td></tr>
+      <tr><td><b>10-11</b> 测试 + <code class="mono">diffcov</code></td><td>失败集合 ⊆ 已记录的既有红基线；每条新增可执行行都真的被执行</td><td>出现新红 ⇒ 失败并只点名新的那几条 · rc=5 并列出未执行行号 · rc=4 无法测量（SKIP，绝不当通过）</td><td>接手时就有 4 条既有红，仍然说得清；首票 <b>32/32</b> 是在补完两条漏测的错误分支之后</td></tr>
+      <tr><td><b>12-13</b> 换行 + 账本</td><td>判定前先归一换行；每票的 rc、耗时、token、成本、<code>settled</code></td><td>「仅空白差异」单独报出 · 没有 <code>settled</code> ⇒ 它根本没结束</td><td>永久性的 CRLF 假红消失；能算出返工率、白跑率、单票成本</td></tr>
+      <tr><td><b>14</b> <code class="mono">gate_watch</code></td><td>N 天内有过委托票或新报告；入口四件仍在</td><td>健康时静默，被绕开时报一次（带冷却）</td><td>抓最糟的那种失败：没人用这套流程</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 03 ===================== -->
+<div class="sec">
+  <h2><i>03</i> 唯一可接受的汇报 <em>—— 来自真实私有仓的一票</em></h2>
+  <div class="term">
+    <div class="bar"><i></i><i></i><i></i></div>
+<div><span class="p">$</span> wfctl verify .</div>
+<div><span class="ok">[wfctl] ✅</span> 测试: pytest -q <span class="dim">（rc=1 —— 4 条失败全是已记录的既有红基线，见 .agents/pytest-baseline.txt）</span></div>
+<div><span class="ok">[wfctl] ✅</span> 改动行覆盖: <span class="hl">PASS 32/32 行被执行（100.0%，阈值 100%）</span></div>
+<div><span class="ok">[wfctl] ✅</span> converge --strict <span class="dim">（报告 ↔ SPEC ↔ 测试）</span></div>
+<div><span class="ok">[wfctl] ✅</span> 账本: rc=0 cost_usd=0.012712 in_tokens=38933 out_tokens=25935 settled=1</div>
+<div><span class="ok">[wfctl] === verify 全绿: 4 项通过, 1 项跳过 ===</span></div>
+<div style="margin-top:9px"><span class="p">$</span> wfctl stats --since 2026-11-24</div>
+<div><span class="dim">票 2 · 返工 0% · 白跑 0% · 验收失败轮次 0 · 成本 $0.0127 / 票</span></div>
+<div style="margin-top:9px"><span class="no">✗</span> <span class="dim">同一条命令，只要有一条需求没被测到 →</span> <span class="no">[wfctl!] ❌ 改动行覆盖（rc=5）—— 未执行行 [264, 265, 266, 267, 268, 269]</span></div>
+  </div>
+</div>
+
+<!-- ===================== 04 ===================== -->
+<div class="sec">
+  <h2><i>04</i> 链条 <em>—— 预检 → 建票 → 检索 → 委托 → 产物校验 → 收敛 → 验收 → 观测</em></h2>
+  <div class="gates">
+    <div class="g"><span class="n">G1</span><h5>预检</h5><p>key、执行器、仓库状态。抓住 rc=0 静默空转。</p></div>
+    <div class="g"><span class="n">G2</span><h5>先查现成</h5><p>动手前留下检索记录：<code>lookup</code>。</p></div>
+    <div class="g"><span class="n">G3</span><h5>建票</h5><p>生成 SPEC + brief；没有 SPEC 就没有票。</p></div>
+    <div class="g"><span class="n">G4</span><h5>任务书体检</h5><p>五段式、实测事实、预期产物，缺一行就拒。</p></div>
+    <div class="g"><span class="n">G5</span><h5>隔离</h5><p>一票一个工作区，第二票被锁。</p></div>
+    <div class="g"><span class="n">G6</span><h5>看门狗</h5><p>N 秒无事件 ⇒ 杀进程、标停滞。</p></div>
+    <div class="g"><span class="n">G7</span><h5>产物完整性</h5><p>产物哈希与真值比对，越界即红。</p></div>
+    <div class="g"><span class="n">G8</span><h5>收敛</h5><p>报告必须引用真的 <code>file:line</code>。</p></div>
+    <div class="g"><span class="n">G9</span><h5>CR 测试指针</h5><p>点名的那条用例被真跑，不是被信。</p></div>
+    <div class="g"><span class="n">G10</span><h5>测试 + 红基线</h5><p>只有新红才失败；收集 0 条永不等于绿。</p></div>
+    <div class="g"><span class="n">G11</span><h5>改动行覆盖</h5><p>改动的行必须被执行：Go / Python。</p></div>
+    <div class="g"><span class="n">G12</span><h5>格式</h5><p>先归一换行再判定，没有 CRLF 假红。</p></div>
+    <div class="g"><span class="n">G13</span><h5>账本</h5><p>rc、成本、<code>settled</code>，派生出指标。</p></div>
+    <div class="g"><span class="n">G14</span><h5>使用巡检</h5><p>流程被绕开时主动报警。</p></div>
+  </div>
+</div>
+
+<!-- ===================== 05 ===================== -->
+<div class="sec">
+  <h2><i>05</i> 为什么站得住 <em>—— 以及造它花了什么</em></h2>
+  <div class="cols">
+    <div class="pr">
+      <h4>五条不肯破的设计铁律</h4>
+      <ol>
+        <li><b>自述不算数。</b>执行器的输出，只有在某条命令对某个机器可验的产物返回 rc=0 时才成为证据。「已验证」「应该没问题」「看着挺好」都不是结果。</li>
+        <li><b>红基线是数据，不是失败。</b>真实仓库一打开就是红的。把红集合记一次，之后只对<b>新增</b>的失败发红 —— 会喊狼来了的门，一周内就没人看。</li>
+        <li><b>豁免必须显式且进版本库。</b>测不了的文件写进 <code>.diffcovignore</code> 并写理由，在 diff 里看得见。阈值绝不偷偷下调。</li>
+        <li><b>管门禁的门禁要在沙盒里验。</b>检查器不能自证：注入一个已知失败，看它红；修好，看它绿。</li>
+        <li><b>度量范围圈到本票。</b><code>git diff HEAD</code> 会带上别人未提交的活儿，量出来的数字毫无意义。</li>
+      </ol>
+    </div>
+    <div class="stats">
+      <div class="st"><div class="v">14</div><div class="l">道门 —— 每一道在发布前都被注入失败实跑过</div></div>
+      <div class="st"><div class="v">32<small>/32</small></div><div class="l">改动行被真执行 —— 真实私有仓的第一票</div></div>
+      <div class="st"><div class="v">$0.013</div><div class="l">那一票的成本：38900 in / 25900 out tokens，6–11 分钟</div></div>
+      <div class="st"><div class="v">0</div><div class="l">第三方依赖 —— 只有 Bash + Python 标准库</div></div>
+      <div class="st" style="grid-column:span 2"><div class="v" style="font-size:19px">另外量到的</div><div class="l">这 5 个真缺陷是<b>被门禁自己</b>在这套工具里抓出来的：跳过非 Go 仓测试的检查器、会覆盖另一票证据的报告、6 分钟 → 按 code object 缓存后 60 秒的覆盖测量。</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="qs">
+    <div class="qs-l"><h4>60 秒开始</h4><p>不用配置：clone、安装、开票。只有委托那一步需要 key —— 十四道门全部离线可跑。</p></div>
+    <div class="qs-r mono">
+      <div><span class="c">$</span> git clone https://github.com/PoorThoth/heavy-coding</div>
+      <div><span class="c">$</span> cd heavy-coding &amp;&amp; ./install.sh</div>
+      <div><span class="c">$</span> wfctl task . my-first-ticket "给 fetch_user 加一次重试"</div>
+      <div><span class="c">$</span> wfctl verify . <span class="k"># 测试 · 改动行覆盖 · 收敛 · 账本</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div>Heavy Coding · v1.0.0 · 首次公开发布 · 2026-11-25 · MIT © 凌贵黔 Ling Guiqian</div>
+  <div class="rt"><span>所有门禁零 token —— 只有委托那一步花钱</span><b>github.com/PoorThoth/heavy-coding</b></div>
+</div>
+
+</body>
+</html>

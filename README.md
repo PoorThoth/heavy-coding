@@ -1,5 +1,7 @@
 # Heavy Coding
 
+**English** · [简体中文](README.zh-CN.md)
+
 **A gate-based workflow for delegating real code changes to an AI agent — where every gate is an exit code, not a claim.**
 
 ![Heavy Coding: seven hallucinations of AI coding, and the gate that kills each one](docs/diagram.png)

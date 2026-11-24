@@ -102,6 +102,18 @@ Fourteen gates, grouped by what they refuse to believe. Full detail and the rc t
 4. **Gates about gates must be tested in a sandbox.** Changing a checker cannot be validated by that checker: inject a known failure, watch it go red, fix, watch it go green.
 5. **Scope the measurement to the ticket.** `git diff HEAD` includes other people's uncommitted work; measuring it produces a meaningless number.
 
+## How this came about
+
+I'm a solo AI-first developer based in China. This project was worn into shape, little by little, while using DeepSeek heavily — for day-to-day development, and for large projects with strict requirements.
+
+I got into AI coding very early, and I honestly can't tell you what the starting point looked like. Maybe a spec, maybe just a prompt template. But I have one habit: roughly once a month, I rebuild my own AI-coding workflow — take in whatever is new, and fold in the real problems I hit while shipping. Do that for long enough and the workflow ends up looking like this. Only when I looked back did I realize how far it had walked, and how improbable the results were.
+
+As I grew, this workflow came to target the two problems that mattered most to me: **hallucination** — I believe this chain has *almost* closed the gap on LLM hallucination in coding — and **safety and standards in large and very large codebases**.
+
+It is still weak on multi-agent coordination and on getting quality faster. I'll keep working on both. I hope this workflow of mine is of some help to your work and your own projects.
+
+PS: I named it **heavy** for two reasons. One, it fits how heavy-duty this workflow turned out to be. Two, I love two lines from *I Like It Heavy*: *"Some like beautiful, perfect, and pretty"* and *"I see the good in the bad and the ugly"*. That is what a person with an engineering mindset actually does while building — and it is the core idea behind everything I develop: **see the good in the bad and the ugly**.
+
 ## Repository layout
 
 ```

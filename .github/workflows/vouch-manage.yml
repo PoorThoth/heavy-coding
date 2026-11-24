@@ -1,0 +1,33 @@
+name: Vouch manage
+
+# Maintainers vouch / denounce / unvouch by commenting on an issue:
+#   vouch            -> vouch for the issue author
+#   vouch @user why  -> vouch for a specific user
+#   denounce @user   -> block a user
+#   unvouch @user    -> remove from the list
+on:
+  issue_comment:
+    types: [created]
+
+# Serialize writes to VOUCHED.td, otherwise two comments race and one is lost.
+concurrency:
+  group: vouch-manage
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+
+jobs:
+  manage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mitchellh/vouch/action/manage-by-issue@v1
+        with:
+          repo: ${{ github.repository }}
+          issue-id: ${{ github.event.issue.number }}
+          comment-id: ${{ github.event.comment.id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

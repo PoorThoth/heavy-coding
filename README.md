@@ -108,6 +108,10 @@ Fourteen gates, grouped by what they refuse to believe. Full detail and the rc t
 4. **Gates about gates must be tested in a sandbox.** Changing a checker cannot be validated by that checker: inject a known failure, watch it go red, fix, watch it go green.
 5. **Scope the measurement to the ticket.** `git diff HEAD` includes other people's uncommitted work; measuring it produces a meaningless number.
 
+## Contributing
+
+PRs from unvouched authors are auto-closed ([`vouch`](https://github.com/mitchellh/vouch)) — that is the anti-slop gate on the entrance, the gates in this repo are the anti-slop gate on the exit. Open one good issue, a maintainer replies `vouch`, then your PRs go through. Issues from new people are welcome and not gated. Read [CONTRIBUTING.md](CONTRIBUTING.md) before you write code.
+
 ## Documents
 
 Every document ships in both languages — English file is the base name, Chinese is `<name>.zh-CN.md`.
@@ -121,6 +125,7 @@ Every document ships in both languages — English file is the base name, Chines
 | Sandbox: break a gate yourself | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
 | One-page poster | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
 | Changelog | [CHANGELOG.md](CHANGELOG.md) | [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md) |
+| Contributing | [CONTRIBUTING.md](CONTRIBUTING.md) | [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md) |
 
 **Ticket templates follow the language switch.** `wfctl task` scaffolds from `templates/task/*.tpl` (Chinese by default). Set `WF_TEMPLATE_LANG=en` and it uses `*.md.en.tpl` + `preamble.en.txt` instead, so an English user gets an English SPEC/brief/convergence report. Any unknown language falls back to Chinese.
 

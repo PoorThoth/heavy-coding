@@ -94,6 +94,10 @@ export WF_DIFFCOV_PATHS=src/mod.py,tests/test_mod.py    # 只测本票动过的�
 4. **改门禁必须在沙盒里验证。**检查器不能自证：注入一个已知失败，看它红；修好，看它绿。
 5. **度量范围圈到本票。**`git diff HEAD` 会带上别人未提交的 WIP，量出来的数字毫无意义。
 
+## 参与贡献
+
+未 vouch 的作者的 PR 会被自动关闭（[`vouch`](https://github.com/mitchellh/vouch)）——那是入口处的反垃圾门，这个仓库里的十四道门是出口处的反垃圾门。先提一个好的 issue，维护者回 `vouch`，之后你的 PR 才进得来；新人的 issue 不受限。动手之前读 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)。
+
 ## 文档（中英文对照）
 
 每份文档都有中英两版：英文版是基础文件名，中文版是 `<名字>.zh-CN.md`，两个版本顶部互相切换。
@@ -107,6 +111,7 @@ export WF_DIFFCOV_PATHS=src/mod.py,tests/test_mod.py    # 只测本票动过的�
 | 沙盒：亲手弄红一次 | [examples/lab/README.md](examples/lab/README.md) | [examples/lab/README.zh-CN.md](examples/lab/README.zh-CN.md) |
 | 一图流 | [docs/diagram.png](docs/diagram.png) | [docs/diagram.zh-CN.png](docs/diagram.zh-CN.png) |
 | 变更日志 | [CHANGELOG.md](CHANGELOG.md) | [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md) |
+| 参与贡献 | [CONTRIBUTING.md](CONTRIBUTING.md) | [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md) |
 
 **票面模板跟语言开关走。** `wfctl task` 从 `templates/task/*.tpl` 生成票（默认中文）。设 `WF_TEMPLATE_LANG=en` 就改用 `*.md.en.tpl` 与 `preamble.en.txt`，英文使用者拿到的是英文 SPEC/brief/收敛报告；不认识的语言自动回落中文。
 

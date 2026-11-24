@@ -1,0 +1,25 @@
+name: Vouch check (issue)
+
+# Issues are NOT gated on purpose: a fresh beta should not scare new people away.
+# Only denounced users get closed (require-vouch: false), so a repeat spammer
+# needs exactly one `denounce` instead of closing every issue by hand.
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mitchellh/vouch/action/check-issue@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          require-vouch: false
+          auto-close: true
+          auto-lock: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

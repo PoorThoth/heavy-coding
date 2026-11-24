@@ -15,4 +15,3 @@
 #   denounced once and stay blocked.
 # - Maintainers vouch by commenting `vouch` (author) / `vouch @user` on an issue.
 poorthoth
--slop-selftest-account write-path self-test

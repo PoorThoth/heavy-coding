@@ -14,4 +14,5 @@
 # - Issues stay open, but denounced users are closed too. Spam accounts get
 #   denounced once and stay blocked.
 # - Maintainers vouch by commenting `vouch` (author) / `vouch @user` on an issue.
-PoorThoth
+poorthoth
+-slop-selftest-account write-path self-test
